@@ -4,9 +4,11 @@ import Header from '../components/Header';
 import Dashboard from '../components/Dashboard';
 import DepositForm from '../components/DepositForm';
 import WithdrawForm from '../components/WithdrawForm';
+import CombinedChart from '../components/CombinedChart';
 
 export default function Home() {
   const [categories, setCategories] = useState([]);
+  const [showGraph, setShowGraph] = useState(false);
 
   // Fetch balance from the API and update the state.
   const fetchBalance = async () => {
@@ -73,22 +75,48 @@ export default function Home() {
       console.error('Error processing withdrawal:', error);
     }
   };
+  // Toggle between graph view and standard view.
+  const toggleGraph = () => {
+    setShowGraph((prev) => !prev);
+  };
+
+  // Extract category values for the graph.
+  const videoGames = categories.find((cat) => cat.name === 'Video Games')?.amount || 0;
+  const generalSpending = categories.find((cat) => cat.name === 'General Spending')?.amount || 0;
+  const charity = categories.find((cat) => cat.name === 'Charity')?.amount || 0;
+  const savings = categories.find((cat) => cat.name === 'Savings')?.amount || 0;
+
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      <Header onDashboardClick={toggleGraph}/>
       <main>
-        <Dashboard categories={categories} />
-        <div className="container mx-auto px-4 py-8">
-          <h2 className="text-2xl font-semibold text-blue-600 mb-4">Deposit Money</h2>
-          <DepositForm onDeposit={handleDeposit} />
-        </div>
-        <div className="container mx-auto px-4 py-8">
-          <h2 className="text-2xl font-semibold text-blue-600 mb-4">Withdraw Money</h2>
-          <WithdrawForm onWithdraw={handleWithdrawal} />
-        </div>
+	  {showGraph ? (
+          <div className="container mx-auto px-4 py-8">
+            <h2 className="text-2xl font-semibold text-blue-600 mb-4">Dashboard Graph</h2>
+            <CombinedChart
+              videoGames={videoGames}
+              generalSpending={generalSpending}
+              charity={charity}
+              savings={savings}
+            />
+          </div>
+        ) : (
+          <>
+            <Dashboard categories={categories} />
+            <div className="container mx-auto px-4 py-8">
+              <h2 className="text-2xl font-semibold text-blue-600 mb-4">Deposit Money</h2>
+              <DepositForm onDeposit={handleDeposit} />
+            </div>
+            <div className="container mx-auto px-4 py-8">
+              <h2 className="text-2xl font-semibold text-blue-600 mb-4">Withdraw Money</h2>
+              <WithdrawForm onWithdraw={handleWithdrawal} />
+            </div>
+          </>
+        )}
       </main>
     </div>
   );
+
 }
 
