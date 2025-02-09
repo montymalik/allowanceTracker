@@ -5,11 +5,11 @@ import { useRouter } from 'next/router';
 export default function SettingsModal({ onClose, onSave, currentValues }) {
   const router = useRouter();
 
-  // State for the initial authentication to access settings.
+  // State for initial authentication to access settings
   const [password, setPassword] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
 
-  // State for the settings form values.
+  // State for the settings form values
   const [values, setValues] = useState({
     videoGames: '',
     generalSpending: '',
@@ -17,11 +17,11 @@ export default function SettingsModal({ onClose, onSave, currentValues }) {
     savings: ''
   });
 
-  // State for displaying the reset confirmation.
+  // State for displaying the reset confirmation
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [resetPassword, setResetPassword] = useState('');
 
-  // When currentValues change, update the form fields.
+  // Update form fields when currentValues change
   useEffect(() => {
     if (currentValues) {
       setValues({
@@ -33,7 +33,7 @@ export default function SettingsModal({ onClose, onSave, currentValues }) {
     }
   }, [currentValues]);
 
-  // Authenticate to access settings.
+  // Authenticate to access settings
   const handleAuthenticate = () => {
     if (password === "admin123") {
       setAuthenticated(true);
@@ -42,18 +42,18 @@ export default function SettingsModal({ onClose, onSave, currentValues }) {
     }
   };
 
-  // Handle changes in the settings form inputs.
+  // Handle changes in the settings form
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
-  // Save the updated settings by calling the onSave callback.
+  // Save updated settings via the onSave callback
   const handleSave = async () => {
     await onSave(values);
     onClose();
   };
 
-  // This function handles the reset confirmation once the reset password is entered.
+  // Handle reset confirmation (when Reset button is pressed)
   const handleResetConfirm = async () => {
     if (resetPassword !== "admin123") {
       alert("Incorrect password for reset.");
@@ -63,7 +63,8 @@ export default function SettingsModal({ onClose, onSave, currentValues }) {
       const res = await fetch('/api/resetBalance', { method: 'POST' });
       if (res.ok) {
         alert("Database reset successfully.");
-        router.push('/'); // Navigate back to the start page.
+        // Reload the page so that both the dashboard and the graph show zeros
+        router.reload();
       } else {
         alert("Reset failed.");
       }
@@ -73,7 +74,7 @@ export default function SettingsModal({ onClose, onSave, currentValues }) {
     }
   };
 
-  // If the reset confirmation is active, render that pop-up.
+  // If the reset confirmation is active, render that pop-up
   if (showResetConfirm) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -108,7 +109,7 @@ export default function SettingsModal({ onClose, onSave, currentValues }) {
     );
   }
 
-  // Otherwise, render the normal settings modal.
+  // Otherwise, render the normal settings modal
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white rounded-xl shadow-xl p-8 max-w-md w-full">
@@ -123,16 +124,10 @@ export default function SettingsModal({ onClose, onSave, currentValues }) {
               placeholder="Password"
             />
             <div className="flex justify-end">
-              <button 
-                onClick={onClose} 
-                className="mr-4 px-4 py-2 border rounded"
-              >
+              <button onClick={onClose} className="mr-4 px-4 py-2 border rounded">
                 Cancel
               </button>
-              <button 
-                onClick={handleAuthenticate} 
-                className="px-4 py-2 bg-blue-600 text-white rounded"
-              >
+              <button onClick={handleAuthenticate} className="px-4 py-2 bg-blue-600 text-white rounded">
                 Authenticate
               </button>
             </div>
@@ -190,16 +185,10 @@ export default function SettingsModal({ onClose, onSave, currentValues }) {
                 Reset Database
               </button>
               <div className="flex space-x-4">
-                <button 
-                  onClick={onClose} 
-                  className="px-4 py-2 border rounded"
-                >
+                <button onClick={onClose} className="px-4 py-2 border rounded">
                   Cancel
                 </button>
-                <button 
-                  onClick={handleSave} 
-                  className="px-4 py-2 bg-green-600 text-white rounded"
-                >
+                <button onClick={handleSave} className="px-4 py-2 bg-green-600 text-white rounded">
                   Save
                 </button>
               </div>

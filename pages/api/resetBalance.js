@@ -5,8 +5,12 @@ const prisma = new PrismaClient();
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
+      // Clear all transactions so the monthly graph will also reset
+      await prisma.transaction.deleteMany({});
+
+      // Reset the balance record (assuming a single record with id = 1)
       const updatedBalance = await prisma.balance.update({
-        where: { id: 1 }, // assumes a single record with id = 1
+        where: { id: 1 },
         data: {
           videoGames: 0,
           generalSpending: 0,
@@ -14,6 +18,7 @@ export default async function handler(req, res) {
           savings: 0,
         },
       });
+
       res.status(200).json(updatedBalance);
     } catch (error) {
       console.error("Error resetting balance:", error);
