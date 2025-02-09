@@ -5,11 +5,13 @@ import Dashboard from '../components/Dashboard';
 import DepositForm from '../components/DepositForm';
 import WithdrawForm from '../components/WithdrawForm';
 import MonthlyFlowChart from '../components/MonthlyFlowChart';
+import SettingsModal from '../components/SettingsModal';
 
 export default function Home() {
   const [categories, setCategories] = useState([]);
   const [showMonthlyFlow, setShowMonthlyFlow] = useState(false);
   const [monthlyData, setMonthlyData] = useState([]);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   // Fetch balance from the API and update the state.
   const fetchBalance = async () => {
@@ -100,10 +102,50 @@ export default function Home() {
     }
   };
   
+
+ // Handle saving updated balance values from the Settings modal
+  const handleUpdateBalance = async (newValues) => {
+    try {
+      const res = await fetch('/api/updateBalance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          videoGames: parseFloat(newValues.videoGames),
+          generalSpending: parseFloat(newValues.generalSpending),
+          charity: parseFloat(newValues.charity),
+          savings: parseFloat(newValues.savings),
+        }),
+      });
+      if (res.ok) {
+        await fetchBalance();
+      } else {
+        const errorData = await res.json();
+        alert(errorData.error || 'Update failed');
+      }
+    } catch (error) {
+      console.error('Error updating balance:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header onDashboardClick={toggleMonthlyFlow}/>
+      <Header
+	  onDashboardClick={toggleMonthlyFlow}
+	  onSettingsClick={() => setShowSettingsModal(true)}
+	  />
       <main>
+	  {showSettingsModal && (
+          <SettingsModal
+            currentValues={{
+              videoGames: categories.find(cat => cat.name === 'Video Games')?.amount || 0,
+              generalSpending: categories.find(cat => cat.name === 'General Spending')?.amount || 0,
+              charity: categories.find(cat => cat.name === 'Charity')?.amount || 0,
+              savings: categories.find(cat => cat.name === 'Savings')?.amount || 0,
+            }}
+            onClose={() => setShowSettingsModal(false)}
+            onSave={handleUpdateBalance}
+          />
+        )}
 	  {showMonthlyFlow ? (
           <div className="container mx-auto px-4 py-8">
             <h2 className="text-2xl font-semibold text-blue-600 mb-4">Monthly Inflows and Outflows</h2>
