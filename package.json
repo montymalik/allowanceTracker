@@ -1,0 +1,25 @@
+{
+  "name": "allowance-tracker",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js",
+    "prisma": "prisma"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.3.1",
+    "chart.js": "^4.4.7",
+    "next": "latest",
+    "node-cron": "^3.0.0",
+    "react": "latest",
+    "react-chartjs-2": "^5.3.0",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.1",
+    "prisma": "^6.3.1",
+    "tailwindcss": "^3.4.17"
+  }
+}

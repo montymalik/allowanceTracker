@@ -1,0 +1,37 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL") // e.g. postgres://user:password@localhost:5432/yourdb
+}
+
+model Balance {
+  id              Int      @id @default(1)
+  videoGames      Float    @default(0)
+  generalSpending Float    @default(0)
+  charity         Float    @default(0)
+  savings         Float    @default(0)
+  updatedAt       DateTime @updatedAt
+}
+
+model Transaction {
+  id              Int             @id @default(autoincrement())
+  type            TransactionType
+  amount          Float
+  videoGames      Float?          // The portion added/subtracted for Video Games
+  generalSpending Float?          // The portion added/subtracted for General Spending
+  charity         Float?          // The portion added (deposits only)
+  savings         Float?          // The portion added (deposits only)
+  createdAt       DateTime        @default(now())
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  AUTO_DEPOSIT
+}
+
