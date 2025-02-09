@@ -4,11 +4,12 @@ import Header from '../components/Header';
 import Dashboard from '../components/Dashboard';
 import DepositForm from '../components/DepositForm';
 import WithdrawForm from '../components/WithdrawForm';
-import CombinedChart from '../components/CombinedChart';
+import MonthlyFlowChart from '../components/MonthlyFlowChart';
 
 export default function Home() {
   const [categories, setCategories] = useState([]);
-  const [showGraph, setShowGraph] = useState(false);
+  const [showMonthlyFlow, setShowMonthlyFlow] = useState(false);
+  const [monthlyData, setMonthlyData] = useState([]);
 
   // Fetch balance from the API and update the state.
   const fetchBalance = async () => {
@@ -29,11 +30,34 @@ export default function Home() {
       console.error('Error fetching balance:', error);
     }
   };
+  // Fetch the monthly inflow/outflow aggregated data
+  const fetchMonthlyFlow = async () => {
+    try {
+      const res = await fetch('/api/monthlyFlow');
+      if (res.ok) {
+        const data = await res.json();
+        setMonthlyData(data);
+      } else {
+        console.error('Error fetching monthly flow data');
+      }
+    } catch (error) {
+      console.error('Error fetching monthly flow data:', error);
+    }
+  };
 
   // Fetch balance when the component mounts.
   useEffect(() => {
     fetchBalance();
   }, []);
+  
+  // Toggle view to show monthly graph
+  const toggleMonthlyFlow = () => {
+    // When switching to the graph view, fetch the monthly data
+    if (!showMonthlyFlow) {
+      fetchMonthlyFlow();
+    }
+    setShowMonthlyFlow((prev) => !prev);
+  };
 
   // When a deposit is made, call the /api/deposit endpoint.
   const handleDeposit = async (depositAmount) => {
@@ -75,32 +99,16 @@ export default function Home() {
       console.error('Error processing withdrawal:', error);
     }
   };
-  // Toggle between graph view and standard view.
-  const toggleGraph = () => {
-    setShowGraph((prev) => !prev);
-  };
-
-  // Extract category values for the graph.
-  const videoGames = categories.find((cat) => cat.name === 'Video Games')?.amount || 0;
-  const generalSpending = categories.find((cat) => cat.name === 'General Spending')?.amount || 0;
-  const charity = categories.find((cat) => cat.name === 'Charity')?.amount || 0;
-  const savings = categories.find((cat) => cat.name === 'Savings')?.amount || 0;
-
-
+  
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header onDashboardClick={toggleGraph}/>
+      <Header onDashboardClick={toggleMonthlyFlow}/>
       <main>
-	  {showGraph ? (
+	  {showMonthlyFlow ? (
           <div className="container mx-auto px-4 py-8">
-            <h2 className="text-2xl font-semibold text-blue-600 mb-4">Dashboard Graph</h2>
-            <CombinedChart
-              videoGames={videoGames}
-              generalSpending={generalSpending}
-              charity={charity}
-              savings={savings}
-            />
-          </div>
+            <h2 className="text-2xl font-semibold text-blue-600 mb-4">Monthly Inflows and Outflows</h2>
+            <MonthlyFlowChart monthlyData={monthlyData} />
+		  </div>
         ) : (
           <>
             <Dashboard categories={categories} />

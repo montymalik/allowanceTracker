@@ -3,5 +3,7 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/": "pages/index.js",
-  "/api/balance": "pages/api/balance.js"
+  "/api/balance": "pages/api/balance.js",
+  "/api/deposit": "pages/api/deposit.js",
+  "/api/monthlyFlow": "pages/api/monthlyFlow.js"
 }
