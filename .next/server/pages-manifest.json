@@ -3,7 +3,6 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/": "pages/index.js",
-  "/api/balance": "pages/api/balance.js",
-  "/api/monthlyFlow": "pages/api/monthlyFlow.js",
-  "/api/updateBalance": "pages/api/updateBalance.js"
+  "/api/resetBalance": "pages/api/resetBalance.js",
+  "/api/balance": "pages/api/balance.js"
 }
