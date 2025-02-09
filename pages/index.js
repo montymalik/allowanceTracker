@@ -148,6 +148,13 @@ export default function Home() {
         )}
 	  {showMonthlyFlow ? (
           <div className="container mx-auto px-4 py-8">
+		  {/* Home button added here */}
+            <button
+              onClick={() => setShowMonthlyFlow(false)}
+              className="mb-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200"
+            >
+              Home
+            </button>
             <h2 className="text-2xl font-semibold text-blue-600 mb-4">Monthly Inflows and Outflows</h2>
             <MonthlyFlowChart monthlyData={monthlyData} />
 		  </div>
