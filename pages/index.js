@@ -162,11 +162,11 @@ export default function Home() {
           <>
             <Dashboard categories={categories} />
             <div className="container mx-auto px-4 py-8">
-              <h2 className="text-2xl font-semibold text-blue-600 mb-4">Deposit Money</h2>
+              <h2 className="text-2xl font-semibold text-blue-600 mb-4 text-center">Deposit Money</h2>
               <DepositForm onDeposit={handleDeposit} />
             </div>
             <div className="container mx-auto px-4 py-8">
-              <h2 className="text-2xl font-semibold text-blue-600 mb-4">Withdraw Money</h2>
+              <h2 className="text-2xl font-semibold text-blue-600 mb-4 text-center">Withdraw Money</h2>
               <WithdrawForm onWithdraw={handleWithdrawal} />
             </div>
           </>
