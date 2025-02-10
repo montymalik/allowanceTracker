@@ -10,9 +10,9 @@ export default async function handler(req, res) {
     }
     
     // Split the deposit as per percentages
-    const videoGames = amount * 0.1;
-    const generalSpending = amount * 0.3;
-    const charity = amount * 0.2;
+    const videoGames = amount * 0.30;
+    const generalSpending = amount * 0.2;
+    const charity = amount * 0.1;
     const savings = amount * 0.4;
     
     try {
