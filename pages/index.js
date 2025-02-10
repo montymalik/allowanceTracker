@@ -5,15 +5,17 @@ import Dashboard from '../components/Dashboard';
 import DepositForm from '../components/DepositForm';
 import WithdrawForm from '../components/WithdrawForm';
 import MonthlyFlowChart from '../components/MonthlyFlowChart';
+import DepositLogTable from '../components/DepositLogTable';
 import SettingsModal from '../components/SettingsModal';
 
 export default function Home() {
   const [categories, setCategories] = useState([]);
   const [showMonthlyFlow, setShowMonthlyFlow] = useState(false);
+  const [showDepositLog, setShowDepositLog] = useState(false);
   const [monthlyData, setMonthlyData] = useState([]);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
-  // Fetch balance from the API and update the state.
+  // Fetch the current balance from the API
   const fetchBalance = async () => {
     try {
       const res = await fetch('/api/balance');
@@ -32,7 +34,8 @@ export default function Home() {
       console.error('Error fetching balance:', error);
     }
   };
-  // Fetch the monthly inflow/outflow aggregated data
+
+  // Fetch monthly inflow/outflow data
   const fetchMonthlyFlow = async () => {
     try {
       const res = await fetch('/api/monthlyFlow');
@@ -47,21 +50,11 @@ export default function Home() {
     }
   };
 
-  // Fetch balance when the component mounts.
   useEffect(() => {
     fetchBalance();
   }, []);
-  
-  // Toggle view to show monthly graph
-  const toggleMonthlyFlow = () => {
-    // When switching to the graph view, fetch the monthly data
-    if (!showMonthlyFlow) {
-      fetchMonthlyFlow();
-    }
-    setShowMonthlyFlow((prev) => !prev);
-  };
 
-  // When a deposit is made, call the /api/deposit endpoint.
+  // Handle deposit (manual, auto-split on the back end)
   const handleDeposit = async (depositAmount) => {
     try {
       const res = await fetch('/api/deposit', {
@@ -80,7 +73,7 @@ export default function Home() {
     }
   };
 
-  // When a withdrawal is made, call the /api/withdraw endpoint.
+  // Handle withdrawal (only from Video Games and General Spending)
   const handleWithdrawal = async ({ videoGamesAmount, generalSpendingAmount }) => {
     try {
       const res = await fetch('/api/withdraw', {
@@ -101,9 +94,8 @@ export default function Home() {
       console.error('Error processing withdrawal:', error);
     }
   };
-  
 
- // Handle saving updated balance values from the Settings modal
+  // Handle saving updated balance values from the Settings modal
   const handleUpdateBalance = async (newValues) => {
     try {
       const res = await fetch('/api/updateBalance', {
@@ -130,11 +122,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header
-	  onDashboardClick={toggleMonthlyFlow}
-	  onSettingsClick={() => setShowSettingsModal(true)}
-	  />
+        onDashboardClick={() => { setShowMonthlyFlow(true); setShowDepositLog(false); }}
+        onDepositLogClick={() => { setShowDepositLog(true); setShowMonthlyFlow(false); }}
+        onSettingsClick={() => setShowSettingsModal(true)}
+      />
       <main>
-	  {showSettingsModal && (
+        {showSettingsModal && (
           <SettingsModal
             currentValues={{
               videoGames: categories.find(cat => cat.name === 'Video Games')?.amount || 0,
@@ -146,18 +139,29 @@ export default function Home() {
             onSave={handleUpdateBalance}
           />
         )}
-	  {showMonthlyFlow ? (
+        {showMonthlyFlow ? (
           <div className="container mx-auto px-4 py-8">
-		  {/* Home button added here */}
             <button
-              onClick={() => setShowMonthlyFlow(false)}
+              onClick={() => { setShowMonthlyFlow(false); }}
               className="mb-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200"
             >
               Home
             </button>
-            <h2 className="text-2xl font-semibold text-blue-600 mb-4">Monthly Inflows and Outflows</h2>
+            <h2 className="text-2xl font-semibold text-blue-600 mb-4 text-center">
+              Monthly Inflows and Outflows
+            </h2>
             <MonthlyFlowChart monthlyData={monthlyData} />
-		  </div>
+          </div>
+        ) : showDepositLog ? (
+          <div className="container mx-auto px-4 py-8">
+            <button
+              onClick={() => { setShowDepositLog(false); }}
+              className="mb-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200"
+            >
+              Home
+            </button>
+            <DepositLogTable />
+          </div>
         ) : (
           <>
             <Dashboard categories={categories} />
@@ -174,6 +178,5 @@ export default function Home() {
       </main>
     </div>
   );
-
 }
 
