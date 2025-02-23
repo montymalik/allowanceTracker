@@ -6,6 +6,9 @@ This is a project I built to help my 9 year old track any money recieved.  The t
 ---
 Allowance Tracker is a simple web application designed to help kids (ages 10–18) manage their allowance and spending. The app lets users deposit money—which is automatically split into four categories—and withdraw funds (only from select categories). It also provides visualizations of monthly inflows and outflows, a deposit log, and an administrative settings panel to update or reset the database.
 
+![Screenshot](Screenshot.png)
+
+
 ### Features
 
 - Automated Deposit Splitting:
