@@ -1,8 +1,1 @@
-{
-  "/_app": "pages/_app.js",
-  "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js",
-  "/": "pages/index.js",
-  "/api/depositLog": "pages/api/depositLog.js",
-  "/api/balance": "pages/api/balance.js"
-}
+{"/api/balance":"pages/api/balance.js","/_error":"pages/_error.js","/_app":"pages/_app.js","/api/depositLog":"pages/api/depositLog.js","/api/monthlyFlow":"pages/api/monthlyFlow.js","/api/deposit":"pages/api/deposit.js","/api/updateBalance":"pages/api/updateBalance.js","/api/resetBalance":"pages/api/resetBalance.js","/":"pages/index.html","/api/transactions":"pages/api/transactions.js","/report":"pages/report.html","/api/withdraw":"pages/api/withdraw.js","/savings":"pages/savings.html","/withdraw":"pages/withdraw.html","/deposit":"pages/deposit.html","/_document":"pages/_document.js","/404":"pages/404.html"}
